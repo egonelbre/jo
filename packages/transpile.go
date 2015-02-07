@@ -6,6 +6,9 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"strings"
+
+	"github.com/egonelbre/bundlejs/indenter"
 )
 
 func (p *Package) transpileSingle() error {
@@ -25,13 +28,18 @@ var (
 
 	fileHeader = "\n\n/* %v */\n"
 
-	pkgname = `\s*"([a-zA-Z\/\.\-\__0-9]+)"`
+	pathslash = "ノ"
+	pkgname   = `\s*"([a-zA-Z\/\.\-\__0-9]+)"`
 
 	rxPkgName = regexp.MustCompile(pkgname)
 	rxImport  = regexp.MustCompile(`import ` + pkgname + `[ \t;]*`)
 	rxImports = regexp.MustCompile(`(?s)import\s*\((?:` + pkgname + `)+\s*\)[ \t;]*`)
 	rxExport  = regexp.MustCompile(`export\s+([a-zA-Z_0-9$]+)\s*[ \t;]*`)
 )
+
+func pkgvar(pkgname string) string {
+	return pathslash + strings.Replace(pkgname, "/", pathslash, -1)
+}
 
 func importStatement(pkgname string) string {
 	if DetermineKind(pkgname) == KindPackage {
@@ -75,9 +83,9 @@ func (p *Package) importFile(filename string) error {
 	}
 	rel = filepath.ToSlash(rel)
 
-	indenter := newIndenter(p.content, []byte{'\t'})
-	fmt.Fprintf(indenter, fileHeader, rel)
-	indenter.Write(data)
+	indent := indenter.New(p.content, []byte{'\t'})
+	fmt.Fprintf(indent, fileHeader, rel)
+	indent.Write(data)
 	return nil
 }
 

@@ -19,6 +19,27 @@ var ノpageノitems = {};
 
 })(ノpageノitems);
 
+/* page/items/basic */
+var ノpageノitemsノbasic = {};
+(function($pkg){	
+	
+	/* page/items/basic/paragraph.js */
+	var items = ノpageノitems;
+	
+	
+	var Paragraph = React.createClass({
+		render: function(){
+			var item = this.props.item;
+			return React.DOM.p({}, item.text);
+		}
+	});
+	
+	items.Register("paragraph", Paragraph);
+	
+	$pkg.Paragraph = Paragraph;
+
+})(ノpageノitemsノbasic);
+
 /* page */
 var ノpage = {};
 (function($pkg){	
@@ -63,27 +84,6 @@ var ノpage = {};
 	$pkg.View = View;
 
 })(ノpage);
-
-/* page/items/basic */
-var ノpageノitemsノbasic = {};
-(function($pkg){	
-	
-	/* page/items/basic/paragraph.js */
-	var items = ノpageノitems;
-	
-	
-	var Paragraph = React.createClass({
-		render: function(){
-			var item = this.props.item;
-			return React.DOM.p({}, item.text);
-		}
-	});
-	
-	items.Register("paragraph", Paragraph);
-	
-	$pkg.Paragraph = Paragraph;
-
-})(ノpageノitemsノbasic);
 
 /*  */
 var ノ = {};

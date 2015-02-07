@@ -1,9 +1,6 @@
 package packages
 
-import (
-	"regexp"
-	"strings"
-)
+import "regexp"
 
 func replaceAllSubmatchFunc(re *regexp.Regexp, data []byte, fn func(s []byte) []byte) []byte {
 	idxs := re.FindAllSubmatchIndex(data, -1)
@@ -21,12 +18,4 @@ func replaceAllSubmatchFunc(re *regexp.Regexp, data []byte, fn func(s []byte) []
 	}
 	ret = append(ret, data[idxs[len(idxs)-1][1]:]...)
 	return ret
-}
-
-const (
-	connector = "ノ"
-)
-
-func pkgvar(pkgname string) string {
-	return connector + strings.Replace(pkgname, "/", connector, -1)
 }
