@@ -19,6 +19,27 @@ var ノpageノitems = {};
 	Ɛ.ComponentFor = ComponentFor;
 })(ノpageノitems);
 
+/* page/items/basic */
+var ノpageノitemsノbasic = {};
+(function(Ɛ){
+	
+	/* page/items/basic/paragraph.js */
+	
+	var items = ノpageノitems;
+	
+	
+	var Paragraph = React.createClass({
+		render: function(){
+			var item = this.props.item;
+			return React.DOM.p({}, item.text);
+		}
+	});
+	
+	items.Register("paragraph", Paragraph);
+	
+	Ɛ.Paragraph = Paragraph;
+})(ノpageノitemsノbasic);
+
 /* page */
 var ノpage = {};
 (function(Ɛ){
@@ -39,7 +60,8 @@ var ノpage = {};
 	Ɛ.Page = Page;	
 	/* page/view.js */
 	
-	var items = ノpageノitems;;
+	var items = ノpageノitems;
+	
 	
 	var View = React.createClass({
 		render: function(){
@@ -63,33 +85,15 @@ var ノpage = {};
 	Ɛ.View = View;
 })(ノpage);
 
-/* page/items/basic */
-var ノpageノitemsノbasic = {};
-(function(Ɛ){
-	
-	/* page/items/basic/paragraph.js */
-	
-	var items = ノpageノitems;;
-	
-	var Paragraph = React.createClass({
-		render: function(){
-			var item = this.props.item;
-			return React.DOM.p({}, item.text);
-		}
-	});
-	
-	items.Register("paragraph", Paragraph);
-	
-	Ɛ.Paragraph = Paragraph;
-})(ノpageノitemsノbasic);
-
 /*  */
 var ノ = {};
 (function(Ɛ){
 	
 	/* Application.js */
 	
-	var page = ノpage;var basic = ノpageノitemsノbasic;
+	var page = ノpage;
+	var basic = ノpageノitemsノbasic;
+	
 	
 	var MainPage = new page.Page();
 	

@@ -29,8 +29,8 @@ var (
 	rpPkgName = `([a-zA-Z\/\.\-\__0-9]+)`
 	rxPkgName = regexp.MustCompile(`"` + rpPkgName + `"`)
 
-	rxImport  = regexp.MustCompile(`import\s+"` + rpPkgName + `"`)
-	rxImports = regexp.MustCompile(`(?s)import\s*\((?:\s*"` + rpPkgName + `"\s*)+\s*\)[ \t;]*`)
+	rxImport  = regexp.MustCompile(`import\s+"` + rpPkgName + `"[ \t;]*\n?`)
+	rxImports = regexp.MustCompile(`(?s)import\s*\((?:\s*"` + rpPkgName + `"\s*)+\s*\)[ \t;]*\n?`)
 	rxExport  = regexp.MustCompile(`export\s+([a-zA-Z_0-9$]+)\s*[ \t;]`)
 )
 
@@ -41,7 +41,7 @@ func pkgvar(pkgname string) string {
 func importStatement(pkgname string) string {
 	if DetermineKind(pkgname) == KindPackage {
 		name := path.Base(pkgname)
-		return fmt.Sprintf("var %s = %s;", name, pkgvar(pkgname))
+		return fmt.Sprintf("var %s = %s;\n", name, pkgvar(pkgname))
 	}
 	return ""
 }
