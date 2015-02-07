@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/egonelbre/bundlejs/packages"
 )
@@ -31,6 +32,9 @@ func main() {
 		fmt.Println("\tbundlejs root/directory bundle.js")
 		os.Exit(1)
 	}
+
+	root = filepath.FromSlash(root)
+	root, _ = filepath.Abs(root)
 
 	pkgs := packages.New(root)
 	if err := pkgs.Load(); err != nil {

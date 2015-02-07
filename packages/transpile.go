@@ -21,34 +21,33 @@ func (p *Package) transpileSingle() error {
 }
 
 var (
-	packageHeader = "/* %v */\nvar %v = {};\n(function($pkg){"
-	packageFooter = "\n\n})(%v);\n"
+	packageHeader = "/* %v */\nvar %v = {};\n(function(Ɛ){\n"
+	packageFooter = "\n})(%v);\n"
 
-	fileHeader = "\n\n/* %v */\n"
+	fileHeader = "\n/* %v */\n"
 
-	pathslash = "ノ"
-	pkgname   = `\s*"([a-zA-Z\/\.\-\__0-9]+)"`
+	rpPkgName = `([a-zA-Z\/\.\-\__0-9]+)`
+	rxPkgName = regexp.MustCompile(`"` + rpPkgName + `"`)
 
-	rxPkgName = regexp.MustCompile(pkgname)
-	rxImport  = regexp.MustCompile(`import ` + pkgname + `[ \t;]*`)
-	rxImports = regexp.MustCompile(`(?s)import\s*\((?:` + pkgname + `)+\s*\)[ \t;]*`)
-	rxExport  = regexp.MustCompile(`export\s+([a-zA-Z_0-9$]+)\s*[ \t;]*`)
+	rxImport  = regexp.MustCompile(`import\s+"` + rpPkgName + `"`)
+	rxImports = regexp.MustCompile(`(?s)import\s*\((?:\s*"` + rpPkgName + `"\s*)+\s*\)[ \t;]*`)
+	rxExport  = regexp.MustCompile(`export\s+([a-zA-Z_0-9$]+)\s*[ \t;]`)
 )
 
 func pkgvar(pkgname string) string {
-	return pathslash + strings.Replace(pkgname, "/", pathslash, -1)
+	return "ノ" + strings.Replace(pkgname, "/", "ノ", -1)
 }
 
 func importStatement(pkgname string) string {
 	if DetermineKind(pkgname) == KindPackage {
 		name := path.Base(pkgname)
-		return fmt.Sprintf("var %s = %s;\n", name, pkgvar(pkgname))
+		return fmt.Sprintf("var %s = %s;", name, pkgvar(pkgname))
 	}
 	return ""
 }
 
 func (p *Package) exportStatement(name string) string {
-	return fmt.Sprintf("$pkg.%s = %s;", name, name)
+	return fmt.Sprintf("Ɛ.%s = %s;", name, name)
 }
 
 func (p *Package) importFile(file string) error {
@@ -58,6 +57,7 @@ func (p *Package) importFile(file string) error {
 	}
 
 	data = replaceAllSubmatchFunc(rxImport, data, func(packagename []byte) (r []byte) {
+		p.Deps = append(p.Deps, string(packagename))
 		return []byte(importStatement(string(packagename)))
 	})
 

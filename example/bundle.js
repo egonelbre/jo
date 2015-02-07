@@ -1,29 +1,30 @@
 /* page/items */
 var ノpageノitems = {};
-(function($pkg){	
+(function(Ɛ){
 	
 	/* page/items/registry.js */
+	
 	var Views = {};
 	
 	function Register(type, component){
 		Views[type] = component;
 	}
 	
-	$pkg.Register = Register;
+	Ɛ.Register = Register;
 	
 	function ComponentFor(item){
 		return Views[item.type];
 	}
 	
-	$pkg.ComponentFor = ComponentFor;
-
+	Ɛ.ComponentFor = ComponentFor;
 })(ノpageノitems);
 
 /* page */
 var ノpage = {};
-(function($pkg){	
+(function(Ɛ){
 	
 	/* page/page.js */
+	
 	function Page(){
 		this.title = "Hello";
 		this.story = [
@@ -35,11 +36,10 @@ var ノpage = {};
 	}
 	Page.prototype = {};
 	
-	$pkg.Page = Page;	
-	
+	Ɛ.Page = Page;	
 	/* page/view.js */
-	var items = ノpageノitems;
 	
+	var items = ノpageノitems;;
 	
 	var View = React.createClass({
 		render: function(){
@@ -60,17 +60,16 @@ var ノpage = {};
 		}
 	});
 	
-	$pkg.View = View;
-
+	Ɛ.View = View;
 })(ノpage);
 
 /* page/items/basic */
 var ノpageノitemsノbasic = {};
-(function($pkg){	
+(function(Ɛ){
 	
 	/* page/items/basic/paragraph.js */
-	var items = ノpageノitems;
 	
+	var items = ノpageノitems;;
 	
 	var Paragraph = React.createClass({
 		render: function(){
@@ -81,18 +80,16 @@ var ノpageノitemsノbasic = {};
 	
 	items.Register("paragraph", Paragraph);
 	
-	$pkg.Paragraph = Paragraph;
-
+	Ɛ.Paragraph = Paragraph;
 })(ノpageノitemsノbasic);
 
 /*  */
 var ノ = {};
-(function($pkg){	
+(function(Ɛ){
 	
 	/* Application.js */
-	var page = ノpage;
-	var basic = ノpageノitemsノbasic;
 	
+	var page = ノpage;var basic = ノpageノitemsノbasic;
 	
 	var MainPage = new page.Page();
 	
@@ -107,6 +104,5 @@ var ノ = {};
 		React.createElement(Application, {page: MainPage}),
 		document.getElementById("application")
 	);
-
 })(ノ);
 

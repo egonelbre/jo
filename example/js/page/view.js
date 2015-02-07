@@ -1,6 +1,5 @@
-import (
-	"page/items"
-)
+
+import "page/items";
 
 var View = React.createClass({
 	render: function(){
