@@ -2,9 +2,7 @@ package packages
 
 import (
 	"fmt"
-	"io/ioutil"
 	"path"
-	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -12,9 +10,9 @@ import (
 )
 
 func (p *Package) transpileSingle() error {
-	data, err := ioutil.ReadFile(p.Files[0])
+	data, err := p.root.Dir.ReadFile(p.Files[0])
 	if err != nil {
-		return fmt.Errorf("error in read file: %s", err)
+		return err
 	}
 
 	p.content.Reset()
@@ -53,8 +51,8 @@ func (p *Package) exportStatement(name string) string {
 	return fmt.Sprintf("$pkg.%s = %s;", name, name)
 }
 
-func (p *Package) importFile(filename string) error {
-	data, err := ioutil.ReadFile(filename)
+func (p *Package) importFile(file string) error {
+	data, err := p.root.Dir.ReadFile(file)
 	if err != nil {
 		return fmt.Errorf(`error in read file: %v`, err)
 	}
@@ -77,14 +75,8 @@ func (p *Package) importFile(filename string) error {
 		return []byte(p.exportStatement(string(name)))
 	})
 
-	rel, err := filepath.Rel(p.root.Dir, filename)
-	if err != nil {
-		rel = filename
-	}
-	rel = filepath.ToSlash(rel)
-
 	indent := indenter.New(p.content, []byte{'\t'})
-	fmt.Fprintf(indent, fileHeader, rel)
+	fmt.Fprintf(indent, fileHeader, file)
 	indent.Write(data)
 	return nil
 }

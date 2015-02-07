@@ -3,11 +3,10 @@ package packages
 import (
 	"fmt"
 	"io"
-	"path/filepath"
 )
 
 type Packages struct {
-	Dir  string
+	Dir  Dir
 	List map[string]*Package
 
 	Order []string
@@ -15,20 +14,12 @@ type Packages struct {
 
 func New(dir string) *Packages {
 	return &Packages{
-		Dir:  dir,
+		Dir:  Dir(dir),
 		List: make(map[string]*Package),
 	}
 }
 
 func (ps *Packages) Load() error {
-	if !filepath.IsAbs(ps.Dir) {
-		var err error
-		ps.Dir, err = filepath.Abs(ps.Dir)
-		if err != nil {
-			return err
-		}
-	}
-
 	var current string
 	unloaded := []string{""}
 	for len(unloaded) > 0 {
