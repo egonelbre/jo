@@ -20,9 +20,9 @@ For example:
             |-- page.js
             `-- view.js
 
-The root directory in this case is the `js` directory. To generate the `bundle.js` file run:
-
-    jo "js" "bundle.js"
+The root directory in this case is the `js` directory. To generate the `bundle.js` file run inside the `example` directory:
+    
+    jo -jopath="js" build bundle.js
 
 The first parameter is the root directory and the second parameter is the output file.
 
