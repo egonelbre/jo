@@ -19,25 +19,23 @@ func Print(pkgs *packages.Packages) {
 
 var (
 	verbose = flag.Bool("v", false, "verbose")
+
+	jopath = flag.String("jopath", os.Getenv("JOPATH"), "path to the packages root (default $GOPATH)")
 )
 
-func main() {
-	flag.Parse()
+func build(args []string) {
+	output := "bundle.js"
+	pkglist := []string{""}
 
-	root := flag.Arg(0)
-	output := flag.Arg(1)
-
-	if root == "" || output == "" {
-		fmt.Println("USAGE:")
-		fmt.Println("\tjo root/directory bundle.js")
-		os.Exit(1)
+	if len(args) > 0 {
+		if len(args) > 1 {
+			pkglist = args[:len(args)-1]
+		}
+		output = args[len(args)-1]
 	}
 
-	root = filepath.FromSlash(root)
-	root, _ = filepath.Abs(root)
-
-	pkgs := packages.New(root)
-	if err := pkgs.Load(); err != nil {
+	pkgs := packages.New(*jopath)
+	if err := pkgs.Load(pkglist...); err != nil {
 		log.Fatal(err)
 	}
 
@@ -56,5 +54,32 @@ func main() {
 
 	if err := pkgs.WriteTo(f); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	if *jopath == "" {
+		fmt.Println("JOPATH has not been defined, either add it as an argument or define it as an environment variable.")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	*jopath = filepath.FromSlash(*jopath)
+	var err error
+	*jopath, err = filepath.Abs(*jopath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cmd := flag.Arg(0)
+	switch cmd {
+	case "build":
+		build(flag.Args()[1:])
+	default:
+		fmt.Printf(`Unknown command "%v".`, cmd)
+		flag.Usage()
+		os.Exit(1)
 	}
 }

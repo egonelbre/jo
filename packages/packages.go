@@ -19,9 +19,9 @@ func New(dir string) *Packages {
 	}
 }
 
-func (ps *Packages) Load() error {
+func (ps *Packages) Load(pkgs ...string) error {
 	var current string
-	unloaded := []string{""}
+	unloaded := pkgs
 	for len(unloaded) > 0 {
 		current, unloaded = unloaded[len(unloaded)-1], unloaded[:len(unloaded)-1]
 		if _, loaded := ps.List[current]; loaded {
