@@ -2,23 +2,14 @@ package packages
 
 import (
 	"fmt"
+	"io"
 	"path"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/egonelbre/jo/indenter"
 )
-
-func (p *Package) transpileSingle() error {
-	data, err := p.root.Dir.ReadFile(p.Files[0])
-	if err != nil {
-		return err
-	}
-
-	p.content.Reset()
-	p.content.Write(data)
-	return nil
-}
 
 var (
 	packageHeader = "/* %v */\nvar %v = {};\n(function(Ɛ){\n"
@@ -39,22 +30,15 @@ func pkgvar(pkgname string) string {
 }
 
 func importStatement(pkgname string) string {
-	if DetermineKind(pkgname) == KindPackage {
-		name := path.Base(pkgname)
-		return fmt.Sprintf("var %s = %s;\n", name, pkgvar(pkgname))
-	}
-	return ""
+	return fmt.Sprintf("var %s = %s;\n", path.Base(pkgname), pkgvar(pkgname))
 }
 
 func (p *Package) exportStatement(name string) string {
 	return fmt.Sprintf("Ɛ.%s = %s;", name, name)
 }
 
-func (p *Package) importFile(file string) error {
-	data, err := p.root.Dir.ReadFile(file)
-	if err != nil {
-		return fmt.Errorf(`error in read file: %v`, err)
-	}
+func (p *Package) transpileFile(file *File) error {
+	data := file.content.Bytes()
 
 	data = replaceAllSubmatchFunc(rxImport, data, func(packagename []byte) (r []byte) {
 		p.Deps = append(p.Deps, string(packagename))
@@ -75,24 +59,36 @@ func (p *Package) importFile(file string) error {
 		return []byte(p.exportStatement(string(name)))
 	})
 
-	indent := indenter.New(p.content, []byte{'\t'})
-	fmt.Fprintf(indent, fileHeader, file)
-	indent.Write(data)
+	file.transpiled.Reset()
+	fmt.Fprintf(&file.transpiled, fileHeader, file.Name)
+	file.transpiled.Write(data)
 	return nil
 }
 
-func (p *Package) transpileModule() error {
-	p.content.Reset()
-
-	fmt.Fprintf(p.content, packageHeader, p.Name, pkgvar(p.Name))
-	defer fmt.Fprintf(p.content, packageFooter, pkgvar(p.Name))
-
-	for _, filename := range p.Files {
-		if err := p.importFile(filename); err != nil {
+func (p *Package) Transpile() error {
+	for _, file := range p.Files {
+		if err := p.transpileFile(file); err != nil {
 			if err != nil {
-				return fmt.Errorf(`importing "%v" failed: %v`, filename, err)
+				return fmt.Errorf(`importing "%v" failed: %v`, file.Name, err)
 			}
 		}
 	}
+	return nil
+}
+
+func (p *Package) WriteTo(w io.Writer) error {
+	fmt.Fprintf(w, packageHeader, p.Name, pkgvar(p.Name))
+	defer fmt.Fprintf(w, packageFooter, pkgvar(p.Name))
+
+	sort.Sort(byFilename(p.Files))
+
+	indent := indenter.New(w, []byte{'\t'})
+	for _, file := range p.Files {
+		_, err := file.transpiled.WriteTo(indent)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

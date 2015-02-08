@@ -1,4 +1,3 @@
-
 function Page(){
 	this.title = "Hello";
 	this.story = [

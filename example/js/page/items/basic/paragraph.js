@@ -1,4 +1,3 @@
-
 import "page/items";
 
 var Paragraph = React.createClass({

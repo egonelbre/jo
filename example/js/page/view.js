@@ -1,4 +1,3 @@
-
 import "page/items";
 
 var View = React.createClass({

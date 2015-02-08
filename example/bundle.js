@@ -3,7 +3,6 @@ var ノpageノitems = {};
 (function(Ɛ){
 	
 	/* page/items/registry.js */
-	
 	var Views = {};
 	
 	function Register(type, component){
@@ -24,7 +23,6 @@ var ノpage = {};
 (function(Ɛ){
 	
 	/* page/page.js */
-	
 	function Page(){
 		this.title = "Hello";
 		this.story = [
@@ -36,9 +34,8 @@ var ノpage = {};
 	}
 	Page.prototype = {};
 	
-	Ɛ.Page = Page;	
+	Ɛ.Page = Page;
 	/* page/view.js */
-	
 	var items = ノpageノitems;
 	
 	
@@ -69,7 +66,6 @@ var ノpageノitemsノbasic = {};
 (function(Ɛ){
 	
 	/* page/items/basic/paragraph.js */
-	
 	var items = ノpageノitems;
 	
 	
@@ -90,7 +86,6 @@ var ノ = {};
 (function(Ɛ){
 	
 	/* Application.js */
-	
 	var page = ノpage;
 	var basic = ノpageノitemsノbasic;
 	

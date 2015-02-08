@@ -9,14 +9,6 @@ func (ps *Packages) Sort() error {
 
 	sorted := make(map[string]bool)
 
-	// first pass, add single files
-	for _, p := range ps.List {
-		if p.Kind == KindFile {
-			order = append(order, p.Name)
-			sorted[p.Name] = true
-		}
-	}
-
 	// try iterate 100x
 	for pass := 0; pass < 100; pass++ {
 		changes := false

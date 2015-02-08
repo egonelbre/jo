@@ -1,4 +1,3 @@
-
 var Views = {};
 
 function Register(type, component){
