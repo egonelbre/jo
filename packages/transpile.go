@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/egonelbre/bundlejs/indenter"
+	"github.com/egonelbre/jo/indenter"
 )
 
 func (p *Package) transpileSingle() error {

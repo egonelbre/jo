@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/egonelbre/bundlejs/packages"
+	"github.com/egonelbre/jo/packages"
 )
 
 func Print(pkgs *packages.Packages) {
@@ -29,7 +29,7 @@ func main() {
 
 	if root == "" || output == "" {
 		fmt.Println("USAGE:")
-		fmt.Println("\tbundlejs root/directory bundle.js")
+		fmt.Println("\tjo root/directory bundle.js")
 		os.Exit(1)
 	}
 
