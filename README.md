@@ -1,8 +1,8 @@
 # jo
 
-Yet another (experimental) package mangager for JavaScript. Although it has a simpler model than npm, bower etc.
+Yet another (experimental) package manager for JavaScript. Although it has a simpler model than npm, bower etc.
 
-**Warning: this is an experimental project and may not play nice with the rest of JavaScript ecosystem!**
+**Warning: this is an experimental project and may not play nice with the rest of JavaScript ecosystem! You'll be better off using jspm in a production environment.**
 
 First each package is defined relative to some root directory.
 
